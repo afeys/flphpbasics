@@ -285,6 +285,32 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
         return array_keys($this->value) !== range(0, count($this->value) - 1);
     }
 
+    /**
+     * 
+     * This function checks if all arraykeys defined in $keys exist in the array
+     * @param type $keys the keys to check for
+     * @return boolean
+     */
+    
+    public function arrayKeysExist($keys) {
+    if (is_array($this->getValue())) {
+        if (is_array($keys)) {
+            $returnvalue = true;
+            foreach ($keys as $key) {
+                if (!array_key_exists($key, $this->getValue())) {
+                    return false;
+                }
+            }
+            return $returnvalue;
+        } else {
+            return array_key_exists($keys, $this->getValue());
+        }
+    }
+    return false;
+}
+
+    
+    
     // --------------------------------------------------------------------------------------//
     // SORTING FUNCTIONS                                                                     //
     // --------------------------------------------------------------------------------------//
@@ -443,24 +469,27 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
 
     /**
      * This function does a treesort of the array, it also maintains index association if $keepkeys = true.
-     * 
-     * @param object $sortstringorarray indicated how you want to sort the array
-     *                                  this can be an array array("name" => "asc", "city" => desc)
-     *                                  or a string "name asc, date desc" or something similar
-     *                                  if no asc or desc is provided, then asc is assumed
-     * @param boolean $keepkeys indicates whether to keep the index association
-     * @param boolean $casesensitive indicates whether to sort casesensitive or insensitive
-     * 
+     * @param string $idfield the name of the idfield of an array element
+     * @param string $parentidfield the name of the parentidfield of an array element
+     * @param string $sortfield the field used for sorting the array
+     * @param boolean $adddepthfield indicates whether to add a depthfield (= level below top level)
+     * @param string $depthfieldname the name of the depthfield, default all added fields are prefixed with double underscore, so default value is __depth
+     * @param boolean $addhaschildrenfield indicates whether to add a field indicating if the array element has children
+     * @param string $haschildrenfieldname, default value = __haschildren
+     * @param boolean $addleftrightfields, indicated whether to add the left and right fields according to the nested set principle
+     * @param string $leftfieldname, default value = __left
+     * @param string $rightfieldname, default value = __right
+     *
      * @return object the ArrayHelper instance
      */
 //    public function advancedSort($sortstringorarray, $keepkeys = true, $casesensitive = true) {
-        function treeSort($parentidfield, $sortfield, $adddepthfield = true, $depthfieldname = "depth", $addhaschildrenfield = true, $haschildrenfieldname = "haschildren", $addleftrightfields = true, $leftfieldname = "left", $rightfieldname = "right") {
+        function treeSort($idfield, $parentidfield, $sortfield, $adddepthfield = true, $depthfieldname = "__depth", $addhaschildrenfield = true, $haschildrenfieldname = "__haschildren", $addleftrightfields = true, $leftfieldname = "__left", $rightfieldname = "__right") {
         // addleftrightfields = add a "left" and "right" field according to "nested" set principle.
         $_newarray = array();
         // first we make sure the array key is identical to the ["id"] field of the array.
         // That way, when we want to get an element by id, it's just $array[$id].
         foreach ($this->value as $key => $option) {
-            $_newarray[$option['id']] = $option;
+            $_newarray[$option[$idfield]] = $option;
         }
         $this->value = $_newarray;
         unset($_newarray);
@@ -469,13 +498,13 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
         foreach ($this->value as $option) {
             if (!array_key_exists("__sortfield", $option)) {
                 // this option has not been processed yet
-                $_sortfield = $option[$sortfield] . "_" . $option['id'];
+                $_sortfield = $option[$sortfield] . "_" . $option[$idfield];
                 $_parentid = $option[$parentidfield];
                 $_depth = 0;
                 $_counter = 0;
-                while ($_parentid !== $option['id'] && $_parentid > 0 && is_numeric($_parentid) && $_parentid !== null && array_key_exists($_parentid, $this->value)) {
+                while ($_parentid !== $option[$idfield] && $_parentid > 0 && is_numeric($_parentid) && $_parentid !== null && array_key_exists($_parentid, $this->value)) {
                     $_tmpoption = $this->value[$_parentid];
-                    $_sortfield = $_tmpoption[$sortfield] . "_" . $_tmpoption['id'] . " | " . $_sortfield;
+                    $_sortfield = $_tmpoption[$sortfield] . "_" . $_tmpoption[$idfield] . " | " . $_sortfield;
                     $_parentid = $_tmpoption[$parentidfield];
                     $_depth += 1;
                     $_counter += 1;
@@ -489,19 +518,19 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
                 }
                 $option["__sortfield"] = $_sortfield;
             }
-            $_newarray[$option['id']] = $option;
+            $_newarray[$option[$idfield]] = $option;
         }
         $this->value = $_newarray;
         unset($_newarray);
 
         // sort the array on __sortfield to get the correct sortorder and renumber the keys
-        $this->array_sort("__sortfield", SORT_ASC, false);
+        $this->simpleSort("__sortfield", SORT_ASC, false);
         // second get an array with all the array keys
         $_arrkeys = array();
         $_db_id_to_counter_lookup_array = array();
         foreach ($this->value as $_key => $_option) {
-            $_arrkeys[$_key] = $_option['id'];
-            $_db_id_to_counter_lookup_array[$_option['id']] = $_key;
+            $_arrkeys[$_key] = $_option[$idfield];
+            $_db_id_to_counter_lookup_array[$_option[$idfield]] = $_key;
         }
 
         if ($addhaschildrenfield) {

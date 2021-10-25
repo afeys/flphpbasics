@@ -2,24 +2,6 @@
 
 namespace FL;
 
-function arrayKeysExist($array, $keys) {
-    if (is_array($array)) {
-        if (is_array($keys)) {
-            $returnvalue = true;
-            foreach ($keys as $key) {
-                if (!array_key_exists($key, $array)) {
-                    return false;
-                }
-            }
-            return $returnvalue;
-        } else {
-            return array_key_exists($keys, $array);
-        }
-    }
-    return false;
-}
-
-
 function toUTF8($d) {
     if (is_array($d)) {
         foreach ($d as $k => $v) {
