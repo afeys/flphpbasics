@@ -224,6 +224,14 @@ final class StringHelperTest extends TestCase
         $this->assertEquals($test, "THÏS ÏS Â TÊXT IN R@NDOM CASE.");
     }
 
+    // Testing the toJSON function
+    // ---------------------------
+    public function testToJSON(): void
+    {
+        $test = FL\StringHelper::getInstance("This is a tëst");
+        $this->assertEquals($test->toJSON(), '"This is a t\u00c3\u00abst"');
+    }
+    
     // Testing the toAlphaNumeric function
     // -----------------------------------
     public function testToAlphaNumeric(): void
@@ -522,6 +530,33 @@ final class StringHelperTest extends TestCase
         $this->assertEquals($test->increment("10", "100"), "Model110");
     }
 
+    // Testing the isValidMailAddress function
+    //  --------------------------------------
+    public function testIsValidMailAddress(): void
+    {
+        $test = FL\StringHelper::getInstance("bob@gmail.com");
+        $this->assertEquals($test->isValidMailAddress(), true);
+        
+        $test = FL\StringHelper::getInstance("bob@gmail");
+        $this->assertEquals($test->isValidMailAddress(), false);
+        
+        $test = FL\StringHelper::getInstance("@gmail.com");
+        $this->assertEquals($test->isValidMailAddress(), false);
+        
+    }
+    
+    
+    // Testing the isValidURL function
+    // ----------------------------------
+    public function testIsValidUrl(): void
+    {
+        $test = FL\StringHelper::getInstance("http://gmail.com");
+        $this->assertEquals($test->isValidURL(), true);
+        
+        $test = FL\StringHelper::getInstance("blabla:/whatever.com");
+        $this->assertEquals($test->isValidURL(), false);
+    }
+    
     // Testing the randomize function
     // ------------------------------
     public function testRandomize(): void

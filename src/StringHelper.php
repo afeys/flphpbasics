@@ -1,6 +1,7 @@
 <?php
 
 namespace FL;
+
 // TODO : is preg_replace and str_replace mb aware ?
 
 use ArrayAccess;
@@ -48,7 +49,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         return new $class($value, $encoding);
     }
 
-
     // --------------------------------------------------------------------------------------//
     // __ FUNCTIONS                                                                      //
     // --------------------------------------------------------------------------------------//
@@ -88,7 +88,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      * interface. The constructor for the ArrayIterator gets passed an array of characters in the
      * $value string. That way the use of foreach is possible
      */
-
     public function getIterator(): \Traversable {
         return new ArrayIterator($this->getValueAsCharArray());
     }
@@ -101,19 +100,19 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         return $this->getLength();
     }
 
-    /** 
+    /**
      * The following offsetXXXXXXXX functions are necessary for the implementation of the ArrayAccess interface 
      * */
-    public function offsetExists( $offset) {
+    public function offsetExists($offset) {
         $length = $this->getLength();
         $offset = (int) $offset;
         if ($offset >= 0) {
             return ($length > $offset);
-        }        
+        }
         return ($length >= abs($offset));
     }
 
-    public function offsetGet( $offset) {
+    public function offsetGet($offset) {
         $length = $this->getLength();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {
@@ -122,16 +121,16 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         return \mb_substr($this->getValue(), $offset, 1, $this->encoding);
     }
 
-    public function offsetSet( $offset,  $value) {
+    public function offsetSet($offset, $value) {
         $length = $this->getLength();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {
             throw new OutOfBoundsException("There is no character at this index");
         }
-        $this->setCharacterAt($offset, $value);        
+        $this->setCharacterAt($offset, $value);
     }
 
-    public function offsetUnset( $offset): void {
+    public function offsetUnset($offset): void {
         $length = $this->getLength();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {
@@ -139,9 +138,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         }
         $this->removeCharacterAt($offset);
     }
-
-
-
 
     // --------------------------------------------------------------------------------------//
     // SETTER FUNCTIONS                                                                      //
@@ -200,7 +196,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      * 
      * @return string The current value of the StringHelper instance
      */
-
     private function getValue() {
         return $this->value;
     }
@@ -210,7 +205,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      * 
      * @return string The current value of the StringHelper instance
      */
-
     public function toString() {
         return $this->value;
     }
@@ -223,9 +217,16 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      * 
      * @return array containing the value parts
      */
-
     public function toArray($separator) {
         return explode($separator, $this->toString());
+    }
+
+    /**
+     * @param type $data
+     * @return string json_encoded value
+     */
+    public function toJSON() {
+        return json_encode(utf8_encode($this->getValue()));
     }
 
     /**
@@ -262,7 +263,7 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         }
         $length = $length === null ? $this->getLength() : $length;
         return \mb_substr($this->getValue(), $start, $length, $this->encoding);
-       // return substr($this->toString(), $idxstart, $length);
+        // return substr($this->toString(), $idxstart, $length);
     }
 
     /**
@@ -279,7 +280,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      * 
      * @return array An array of string characters
      */
-
     public function getValueAsCharArray() {
         $returnvalue = [];
         $length = $this->getLength();
@@ -289,55 +289,63 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         return $returnvalue;
     }
 
+    /**
+     * Counts the number of occurrences of string $substring in value
+     * @param string $substring  string to search for
+     */
+    public function countOccurrences($substring) {
+        return mb_substr_count($this->value, $substring, $this->getEncoding());
+    }
+
     // --------------------------------------------------------------------------------------//
     // HELPER FUNCTIONS                                                                      //
     // --------------------------------------------------------------------------------------//
 
-/**
- * Replace all occurrences of the search string with the replacement string. Multibyte safe.
- *
- * @param string|array $search The value being searched for, otherwise known as the needle. An array may be used to designate multiple needles.
- * @param string|array $replace The replacement value that replaces found search values. An array may be used to designate multiple replacements.
- * @param string|array $subject The string or array being searched and replaced on, otherwise known as the haystack.
- *                              If subject is an array, then the search and replace is performed with every entry of subject, and the return value is an array as well.
- * @param string $encoding The encoding parameter is the character encoding. If it is omitted, the internal character encoding value will be used.
- * @param int $count If passed, this will be set to the number of replacements performed.
- * @return array|string
- */
-public static function mb_str_replace($search, $replace, $subject, $encoding = 'auto', &$count=0) {
-    if(!is_array($subject)) {
-        $searches = is_array($search) ? array_values($search) : [$search];
-        $replacements = is_array($replace) ? array_values($replace) : [$replace];
-        $replacements = array_pad($replacements, count($searches), '');
-        foreach($searches as $key => $search) {
-            $replace = $replacements[$key];
-            $search_len = mb_strlen($search, $encoding);
+    /**
+     * Replace all occurrences of the search string with the replacement string. Multibyte safe.
+     *
+     * @param string|array $search The value being searched for, otherwise known as the needle. An array may be used to designate multiple needles.
+     * @param string|array $replace The replacement value that replaces found search values. An array may be used to designate multiple replacements.
+     * @param string|array $subject The string or array being searched and replaced on, otherwise known as the haystack.
+     *                              If subject is an array, then the search and replace is performed with every entry of subject, and the return value is an array as well.
+     * @param string $encoding The encoding parameter is the character encoding. If it is omitted, the internal character encoding value will be used.
+     * @param int $count If passed, this will be set to the number of replacements performed.
+     * @return array|string
+     */
+    public static function mb_str_replace($search, $replace, $subject, $encoding = 'auto', &$count = 0) {
+        if (!is_array($subject)) {
+            $searches = is_array($search) ? array_values($search) : [$search];
+            $replacements = is_array($replace) ? array_values($replace) : [$replace];
+            $replacements = array_pad($replacements, count($searches), '');
+            foreach ($searches as $key => $search) {
+                $replace = $replacements[$key];
+                $search_len = mb_strlen($search, $encoding);
 
-            $sb = [];
-            while(($offset = mb_strpos($subject, $search, 0, $encoding)) !== false) {
-                $sb[] = mb_substr($subject, 0, $offset, $encoding);
-                $subject = mb_substr($subject, $offset + $search_len, null, $encoding);
-                ++$count;
+                $sb = [];
+                while (($offset = mb_strpos($subject, $search, 0, $encoding)) !== false) {
+                    $sb[] = mb_substr($subject, 0, $offset, $encoding);
+                    $subject = mb_substr($subject, $offset + $search_len, null, $encoding);
+                    ++$count;
+                }
+                $sb[] = $subject;
+                $subject = implode($replace, $sb);
             }
-            $sb[] = $subject;
-            $subject = implode($replace, $sb);
+        } else {
+            foreach ($subject as $key => $value) {
+                $subject[$key] = self::mb_str_replace($search, $replace, $value, $encoding, $count);
+            }
         }
-    } else {
-        foreach($subject as $key => $value) {
-            $subject[$key] = self::mb_str_replace($search, $replace, $value, $encoding, $count);
-        }
+        return $subject;
     }
-    return $subject;
-}
 
     /**
-    * @param mixed $string The input string.
-    * @param mixed $replacement The replacement string.
-    * @param mixed $start If start is positive, the replacing will begin at the start'th offset into string.  If start is negative, the replacing will begin at the start'th character from the end of string.
-    * @param mixed $length If given and is positive, it represents the length of the portion of string which is to be replaced. If it is negative, it represents the number of characters from the end of string at which to stop replacing. If it is not given, then it will default to strlen( string ); i.e. end the replacing at the end of string. Of course, if length is zero then this function will have the effect of inserting replacement into string at the given start offset.
-    * @return string The result string is returned. If string is an array then array is returned.
-    */
-    private function mb_substr_replace($string, $replacement, $start, $length=NULL) {
+     * @param mixed $string The input string.
+     * @param mixed $replacement The replacement string.
+     * @param mixed $start If start is positive, the replacing will begin at the start'th offset into string.  If start is negative, the replacing will begin at the start'th character from the end of string.
+     * @param mixed $length If given and is positive, it represents the length of the portion of string which is to be replaced. If it is negative, it represents the number of characters from the end of string at which to stop replacing. If it is not given, then it will default to strlen( string ); i.e. end the replacing at the end of string. Of course, if length is zero then this function will have the effect of inserting replacement into string at the given start offset.
+     * @return string The result string is returned. If string is an array then array is returned.
+     */
+    private function mb_substr_replace($string, $replacement, $start, $length = NULL) {
         if (is_array($string)) {
             $num = count($string);
             // $replacement
@@ -347,28 +355,26 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
                 $start = array_slice($start, 0, $num);
                 foreach ($start as $key => $value)
                     $start[$key] = is_int($value) ? $value : 0;
-            }
-            else {
+            } else {
                 $start = array_pad(array($start), $num, $start);
             }
             // $length
             if (!isset($length)) {
                 $length = array_fill(0, $num, 0);
-            }
-            elseif (is_array($length)) {
+            } elseif (is_array($length)) {
                 $length = array_slice($length, 0, $num);
                 foreach ($length as $key => $value)
                     $length[$key] = isset($value) ? (is_int($value) ? $value : $num) : 0;
-            }
-            else {
+            } else {
                 $length = array_pad(array($length), $num, $length);
             }
             // Recursive call
             return array_map(__FUNCTION__, $string, $replacement, $start, $length);
         }
-        preg_match_all('/./us', (string)$string, $smatches);
-        preg_match_all('/./us', (string)$replacement, $rmatches);
-        if ($length === NULL) $length = mb_strlen($string);
+        preg_match_all('/./us', (string) $string, $smatches);
+        preg_match_all('/./us', (string) $replacement, $rmatches);
+        if ($length === NULL)
+            $length = mb_strlen($string);
         array_splice($smatches[0], $start, $length, $rmatches[0]);
         return join($smatches[0]);
     }
@@ -422,9 +428,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         return $this;
     }
 
-
-
-     /**
+    /**
      * Replaces the character at $positionindex with $char
      * 
      * @param integer $positionindex the position of the character to replace (0-based)
@@ -434,14 +438,14 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      */
     public function setCharacterAt($positionindex, $char) {
         if ($positionindex >= 0 && $positionindex <= $this->getLength()) {
-            $this->setValue($this->mb_substr_replace($this->getValue(),$char,$positionindex,1));
+            $this->setValue($this->mb_substr_replace($this->getValue(), $char, $positionindex, 1));
         } else {
             throw new OutOfBoundsException("Trying to access a character outside the string");
         }
         return $this;
     }
 
-     /**
+    /**
      * Removes the character at $positionindex
      * 
      * @param integer $positionindex the position of the character to remove (0-based)
@@ -451,12 +455,12 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
     public function removeCharacterAt($positionindex) {
         if ($positionindex >= 0 && $positionindex <= $this->getLength() && $this->getLength() > 0) {
             if ($positionindex == 0) {
-                $this->setValue(mb_substr($this->getValue(), 1, null , $this->getEncoding() ));
+                $this->setValue(mb_substr($this->getValue(), 1, null, $this->getEncoding()));
             } else {
                 if ($positionindex == $this->getLength()) {
-                    $this->setValue(mb_substr($this->getValue(), 0, $this->getLength() - 1 , $this->getEncoding() ));
+                    $this->setValue(mb_substr($this->getValue(), 0, $this->getLength() - 1, $this->getEncoding()));
                 } else {
-                    $this->setValue(mb_substr($this->getValue(), 0, $positionindex, $this->getEncoding() ) . mb_substr($this->getValue(), $positionindex + 1, null, $this->getEncoding()));
+                    $this->setValue(mb_substr($this->getValue(), 0, $positionindex, $this->getEncoding()) . mb_substr($this->getValue(), $positionindex + 1, null, $this->getEncoding()));
                 }
             }
         } else {
@@ -465,7 +469,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         return $this;
     }
 
-     /**
+    /**
      * Inserts a character at $positionindex
      * 
      * @param integer $positionindex the position of the character to remove (0-based)
@@ -481,7 +485,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
                 if ($positionindex == $this->getLength()) {
                     $this->setValue($this->getValue() . $string);
                 } else {
-                    $this->setValue(mb_substr($this->getValue(), 0, $positionindex, $this->getEncoding() ) . $string . mb_substr($this->getValue(), $positionindex, null, $this->getEncoding()));
+                    $this->setValue(mb_substr($this->getValue(), 0, $positionindex, $this->getEncoding()) . $string . mb_substr($this->getValue(), $positionindex, null, $this->getEncoding()));
                 }
             }
         } else {
@@ -489,7 +493,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         }
         return $this;
     }
-
 
     /**
      * Appends a string to value
@@ -512,7 +515,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         $this->setValue($str . $this->toString());
         return $this;
     }
-
 
     /**
      * Sanitizes the string and removes all tags and htmlentities
@@ -601,17 +603,16 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         return $this;
     }
 
-     /**
+    /**
      * Removes excessive white space
      * @return object the Stringhelper instance
      */
-
     function removeExcessiveWhiteSpace() {
         $this->setValue(preg_replace('!\s+!', ' ', $this->getValue()));
         return $this;
     }
 
-     /**
+    /**
      * Removes $str from the beginning of value if it is present
      * @param string $str string to remove from beginning of the value of StringHelper
      * @return object the Stringhelper instance
@@ -623,7 +624,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         return $this;
     }
 
-     /**
+    /**
      * Removes $str from the end of value if it is present
      * @param string $str string to remove from end of the value of StringHelper
      * @return object the Stringhelper instance
@@ -646,6 +647,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
             $this->setValue(mb_substr($this->getValue(), 0, mb_strrpos($this->getValue(), $str)));
         } else {
             if ($return_all_if_not_found == true) {
+                
             } else {
                 $this->setValue(null);
             }
@@ -664,6 +666,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
             $this->setValue(mb_substr($this->getValue(), mb_strrpos($this->getValue(), $str) + mb_strlen($str)));
         } else {
             if ($return_all_if_not_found == true) {
+                
             } else {
                 $this->setValue(null);
             }
@@ -682,6 +685,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
             $this->setValue(mb_substr($this->getValue(), 0, mb_strpos($this->getValue(), $str)));
         } else {
             if ($return_all_if_not_found == true) {
+                
             } else {
                 $this->setValue(null);
             }
@@ -700,13 +704,14 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
             $this->setValue(mb_substr($this->getValue(), mb_strpos($this->getValue(), $str) + mb_strlen($str)));
         } else {
             if ($return_all_if_not_found == true) {
+                
             } else {
                 $this->setValue(null);
             }
         }
         return $this;
     }
-   
+
     /**
      * this flips all values in the string: a becomes z, b becomes y, ....
      * relevant ASCII values:   0 -> 9 (decimal 48 till 57)
@@ -714,24 +719,22 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      *                          a -> z (decimal 97 till 122)
      * @return object the StringHelper instance
      */
-
-        public function flip() {
+    public function flip() {
         $newString = "";
-        for ($i = 0; $i < mb_strlen($this->value); ++$i)
-        {
+        for ($i = 0; $i < mb_strlen($this->value); ++$i) {
             // ascii value
             $val = ord($this->value[$i]);
             $newval = $val;
             if ($val >= 48 && $val <= 57) {
-                $newval  = NumberHelper::getInstance($val)->setLowerLimit(48)->setUpperLimit(57)->flip()->getValue();
+                $newval = NumberHelper::getInstance($val)->setLowerLimit(48)->setUpperLimit(57)->flip()->getValue();
             }
             if ($val >= 65 && $val <= 90) {
-                $newval  = NumberHelper::getInstance($val)->setLowerLimit(65)->setUpperLimit(90)->flip()->getValue();
+                $newval = NumberHelper::getInstance($val)->setLowerLimit(65)->setUpperLimit(90)->flip()->getValue();
             }
             if ($val >= 97 && $val <= 122) {
-                $newval  = NumberHelper::getInstance($val)->setLowerLimit(97)->setUpperLimit(122)->flip()->getValue();
+                $newval = NumberHelper::getInstance($val)->setLowerLimit(97)->setUpperLimit(122)->flip()->getValue();
             }
-            $newString = $newString.chr($newval); 
+            $newString = $newString . chr($newval);
         }
         $this->setValue($newString);
         return $this;
@@ -773,9 +776,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         return $this;
     }
 
-
-
-
     // --------------------------------------------------------------------------------------//
     // CHECKER FUNCTIONS                                                                     //
     // --------------------------------------------------------------------------------------//
@@ -812,9 +812,8 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      * Checks whether value is empty
      * @return boolean true or false
      */
-
     public function isEmpty() {
-        if ($this->toString() == "" || $this->getValue() == null) {
+        if ($this->toString() === "" || $this->getValue() === null) {
             return true;
         } else {
             return false;
@@ -825,7 +824,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      * Checks whether value is null
      * @return boolean true or false
      */
-
     public function isNull() {
         if ($this->getValue() == null) {
             return true;
@@ -837,7 +835,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      * Checks whether value is equal to 0 (numeric zero)
      * @return boolean true or false
      */
-
     public function isZero() {
         if ($this->getValue() == "0") {
             return true;
@@ -849,7 +846,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      * Checks whether value is null or zero
      * @return boolean true or false
      */
-
     public function isEmptyNullOrZero() {
         if ($this->isEmpty() || $this->isZero()) {
             return true;
@@ -861,7 +857,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
      * Checks whether value is not null and not empty
      * @return boolean true or false
      */
-
     public function isFilled() {
         return !$this->isEmpty();
     }
@@ -886,7 +881,6 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         }
         return false;
     }
-
 
     /**
      * Checks whether value starts with $str
@@ -947,15 +941,31 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         return $returnvalue;
     }
 
-    /** 
-     * Counts the number of occurrences of string $substring in value
-     * @param string $substring  string to search for
+    /**
+     * checks if the value is a valid url
+     * 
+     * @return boolean
      */
-    public function countOccurrences($substring) {
-        return mb_substr_count($this->value, $substring, $this->getEncoding());
+    public function isValidUrl() {
+        if (filter_var($this->getValue(), FILTER_VALIDATE_URL)) {
+            return true;
+        }
+        return false;
     }
 
-    /** 
+    /**
+     * checks if the value is a valid mailaddress
+     * 
+     * @return boolean
+     */
+    public function isValidMailAddress() {
+        if (filter_var($this->getValue(), FILTER_VALIDATE_EMAIL)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Checks if the string contains any multibyte characters
      * @return boolean true if the string contains any multibyte characters, false otherwise
      */
@@ -1012,12 +1022,11 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         }
     }
 
-        /**
+    /**
      * Checks if value is not empty, if it is, then return $str, otherwise return an empty string
      * @param string $str the value to return if value is not empty
      * @return string 
      */
-
     public function ifNotEmpty($str) {
         if ($this->isEmpty()) {
             return "";
@@ -1026,7 +1035,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         }
     }
 
-        /**
+    /**
      * Checks if value is empty, if it is, then return $str, otherwise return an empty string
      * @param string $str the value to return if value is not empty
      * @return string 
@@ -1039,10 +1048,7 @@ public static function mb_str_replace($search, $replace, $subject, $encoding = '
         }
     }
 
-  
-
 }
-
 
 /*
 

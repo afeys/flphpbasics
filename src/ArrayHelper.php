@@ -483,7 +483,7 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
      * @return object the ArrayHelper instance
      */
 //    public function advancedSort($sortstringorarray, $keepkeys = true, $casesensitive = true) {
-        function treeSort($idfield, $parentidfield, $sortfield, $adddepthfield = true, $depthfieldname = "__depth", $addhaschildrenfield = true, $haschildrenfieldname = "__haschildren", $addleftrightfields = true, $leftfieldname = "__left", $rightfieldname = "__right") {
+      public function treeSort($idfield, $parentidfield, $sortfield, $casesensitive = true, $adddepthfield = true, $depthfieldname = "__depth", $addhaschildrenfield = true, $haschildrenfieldname = "__haschildren", $addleftrightfields = true, $leftfieldname = "__left", $rightfieldname = "__right") {
         // addleftrightfields = add a "left" and "right" field according to "nested" set principle.
         $_newarray = array();
         // first we make sure the array key is identical to the ["id"] field of the array.
@@ -498,13 +498,21 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
         foreach ($this->value as $option) {
             if (!array_key_exists("__sortfield", $option)) {
                 // this option has not been processed yet
-                $_sortfield = $option[$sortfield] . "_" . $option[$idfield];
+                if ($casesensitive == false) {
+                    $_sortfield = mb_strtolower($option[$sortfield] . "_" . $option[$idfield]);
+                } else {
+                    $_sortfield = $option[$sortfield] . "_" . $option[$idfield];
+                }
                 $_parentid = $option[$parentidfield];
                 $_depth = 0;
                 $_counter = 0;
                 while ($_parentid !== $option[$idfield] && $_parentid > 0 && is_numeric($_parentid) && $_parentid !== null && array_key_exists($_parentid, $this->value)) {
                     $_tmpoption = $this->value[$_parentid];
-                    $_sortfield = $_tmpoption[$sortfield] . "_" . $_tmpoption[$idfield] . " | " . $_sortfield;
+                    if ($casesensitive == false) {
+                        $_sortfield = mb_strtolower($_tmpoption[$sortfield] . "_" . $_tmpoption[$idfield] . " | " . $_sortfield);
+                    } else {
+                        $_sortfield = $_tmpoption[$sortfield] . "_" . $_tmpoption[$idfield] . " | " . $_sortfield;
+                    }
                     $_parentid = $_tmpoption[$parentidfield];
                     $_depth += 1;
                     $_counter += 1;

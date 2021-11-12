@@ -312,9 +312,6 @@ final class ArrayHelperTest extends TestCase
           array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson"),  
         );
         $test = FL\ArrayHelper::getInstance($testarray)->treeSort("id","parentid", "firstname");
-        echo "<pre>sorted array:\n";
-        print_r($test->toArray());
-        echo "</pre>";
         $expected = array(
           array("id" => 10, "parentid" => null, "firstname" => "Patrick", "lastname" => "Johnson", "__depth" => 0, "__left" => 1, "__right" => 12, "__sortfield" => "Patrick_10", "__haschildren" => 1),  
           array("id" => 11, "parentid" => 10, "firstname" => "Sandra", "lastname" => "Johnson", "__depth" => 1, "__left" => 2, "__right" => 5, "__sortfield" => "Patrick_10 | Sandra_11", "__haschildren" => 1),  
@@ -322,6 +319,65 @@ final class ArrayHelperTest extends TestCase
           array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson", "__depth" => 1, "__left" => 6, "__right" => 11, "__sortfield" => "Patrick_10 | Timmy_12", "__haschildren" => 1),  
           array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson", "__depth" => 2, "__left" => 7, "__right" => 8, "__sortfield" => "Patrick_10 | Timmy_12 | Bobby_13", "__haschildren" => ""),  
           array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson", "__depth" => 2, "__left" => 9, "__right" =>10, "__sortfield" => "Patrick_10 | Timmy_12 | Shania_14", "__haschildren" => ""),  
+        );
+        $this->assertEquals($test->toArray(), $expected);
+
+        $testarray = array(
+          array("id" => 10, "parentid" => null, "firstname" => "patrick", "lastname" => "Johnson"),  
+          array("id" => 11, "parentid" => 10, "firstname" => "Sandra", "lastname" => "Johnson"),  
+          array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson"),  
+          array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson"),  
+          array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson"),  
+          array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson"),  
+        );
+        $test = FL\ArrayHelper::getInstance($testarray)->treeSort("id","parentid", "firstname", false);
+        $expected = array(
+          array("id" => 10, "parentid" => null, "firstname" => "patrick", "lastname" => "Johnson", "__depth" => 0, "__left" => 1, "__right" => 12, "__sortfield" => "patrick_10", "__haschildren" => 1),  
+          array("id" => 11, "parentid" => 10, "firstname" => "Sandra", "lastname" => "Johnson", "__depth" => 1, "__left" => 2, "__right" => 5, "__sortfield" => "patrick_10 | sandra_11", "__haschildren" => 1),  
+          array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson", "__depth" => 2, "__left" => 3, "__right" => 4, "__sortfield" => "patrick_10 | sandra_11 | ryan_15", "__haschildren" => ""),  
+          array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson", "__depth" => 1, "__left" => 6, "__right" => 11, "__sortfield" => "patrick_10 | timmy_12", "__haschildren" => 1),  
+          array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson", "__depth" => 2, "__left" => 7, "__right" => 8, "__sortfield" => "patrick_10 | timmy_12 | bobby_13", "__haschildren" => ""),  
+          array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson", "__depth" => 2, "__left" => 9, "__right" =>10, "__sortfield" => "patrick_10 | timmy_12 | shania_14", "__haschildren" => ""),  
+        );
+        $this->assertEquals($test->toArray(), $expected);
+
+
+        $testarray = array(
+          array("id" => 10, "parentid" => null, "firstname" => "Patrick", "lastname" => "Johnson"),  
+          array("id" => 11, "parentid" => 10, "firstname" => "sandra", "lastname" => "Johnson"),  
+          array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson"),  
+          array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson"),  
+          array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson"),  
+          array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson"),  
+        );
+        $test = FL\ArrayHelper::getInstance($testarray)->treeSort("id","parentid", "firstname", false);
+        $expected = array(
+          array("id" => 10, "parentid" => null, "firstname" => "Patrick", "lastname" => "Johnson", "__depth" => 0, "__left" => 1, "__right" => 12, "__sortfield" => "patrick_10", "__haschildren" => 1),  
+          array("id" => 11, "parentid" => 10, "firstname" => "sandra", "lastname" => "Johnson", "__depth" => 1, "__left" => 2, "__right" => 5, "__sortfield" => "patrick_10 | sandra_11", "__haschildren" => 1),  
+          array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson", "__depth" => 2, "__left" => 3, "__right" => 4, "__sortfield" => "patrick_10 | sandra_11 | ryan_15", "__haschildren" => ""),  
+          array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson", "__depth" => 1, "__left" => 6, "__right" => 11, "__sortfield" => "patrick_10 | timmy_12", "__haschildren" => 1),  
+          array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson", "__depth" => 2, "__left" => 7, "__right" => 8, "__sortfield" => "patrick_10 | timmy_12 | bobby_13", "__haschildren" => ""),  
+          array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson", "__depth" => 2, "__left" => 9, "__right" =>10, "__sortfield" => "patrick_10 | timmy_12 | shania_14", "__haschildren" => ""),  
+        );
+        $this->assertEquals($test->toArray(), $expected);
+
+
+        $testarray = array(
+          array("id" => 10, "parentid" => null, "firstname" => "Patrick", "lastname" => "Johnson"),  
+          array("id" => 11, "parentid" => 10, "firstname" => "sandra", "lastname" => "Johnson"),  
+          array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson"),  
+          array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson"),  
+          array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson"),  
+          array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson"),  
+        );
+        $test = FL\ArrayHelper::getInstance($testarray)->treeSort("id","parentid", "firstname", true);
+        $expected = array(
+          array("id" => 10, "parentid" => null, "firstname" => "Patrick", "lastname" => "Johnson", "__depth" => 0, "__left" => 1, "__right" => 12, "__sortfield" => "Patrick_10", "__haschildren" => 1),  
+          array("id" => 12, "parentid" => 10, "firstname" => "Timmy", "lastname" => "Johnson", "__depth" => 1, "__left" => 2, "__right" => 7, "__sortfield" => "Patrick_10 | Timmy_12", "__haschildren" => 1),  
+          array("id" => 13, "parentid" => 12, "firstname" => "Bobby", "lastname" => "Johnson", "__depth" => 2, "__left" => 3, "__right" => 4, "__sortfield" => "Patrick_10 | Timmy_12 | Bobby_13", "__haschildren" => ""),  
+          array("id" => 14, "parentid" => 12, "firstname" => "Shania", "lastname" => "Johnson", "__depth" => 2, "__left" => 5, "__right" =>6, "__sortfield" => "Patrick_10 | Timmy_12 | Shania_14", "__haschildren" => ""),  
+          array("id" => 11, "parentid" => 10, "firstname" => "sandra", "lastname" => "Johnson", "__depth" => 1, "__left" => 8, "__right" => 11, "__sortfield" => "Patrick_10 | sandra_11", "__haschildren" => 1),  
+          array("id" => 15, "parentid" => 11, "firstname" => "Ryan", "lastname" => "Thomson", "__depth" => 2, "__left" => 9, "__right" => 10, "__sortfield" => "Patrick_10 | sandra_11 | Ryan_15", "__haschildren" => ""),  
         );
         $this->assertEquals($test->toArray(), $expected);
 
