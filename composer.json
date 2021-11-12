@@ -1,0 +1,34 @@
+{
+    "name": "afeys/flphpbasics",
+    "description": "Several helper classes to make handling arrays, strings, numbers, etc. a lot easier and more efficient",
+    "keywords": [
+        "array", "string", "number", "util", "helper", "manipulation", "encryption", 
+        "multibyte", "chainable"
+    ],
+    "homepage": "https://github.com/afeys/flphpbasics",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Andy Feys",
+            "email": "gitprojects@feys.be",
+            "homepage": "http://www.feys.be"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0"
+    },
+    "support": {
+        "issues": "https://github.com/afeys/flphpbasics/issues",
+        "source": "https://github.com/afeys/flphpbasics/"
+    },
+    "autoload": {
+        "psr-4": { "flphpbasics\\": "src/" },
+        "files": ["src/init.php"]
+    },
+    "autoload-dev": {
+        "classmap": [ "tests" ]
+    }
+}
