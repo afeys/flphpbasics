@@ -3,6 +3,7 @@
 namespace FL;
 
 // TODO : is preg_replace and str_replace mb aware ?
+// TODO : add a function regexp($regexp) to allow regexp modifications on the value string
 
 use ArrayAccess;
 use ArrayIterator;
