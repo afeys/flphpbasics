@@ -13,7 +13,7 @@ class UrlHelper {
      */
     public static function getInstance() {
         $class = __CLASS__;
-        return new $class($value);
+        return new $class();
     }
 
     // --------------------------------------------------------------------------------------//
@@ -26,14 +26,25 @@ class UrlHelper {
     function __construct() {
     }
  
-    
-    function getBaseUrl(){
+    function getProtocol() {
         if(isset($_SERVER['HTTPS'])){
             $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] != "off") ? "https" : "http";
         }
         else{
             $protocol = 'http';
         }
-        return $protocol . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        return $protocol;
+    }
+    
+    function getHost() {
+        return $_SERVER['HTTP_HOST'];
+    }
+    
+    function getPath() {
+        return $_SERVER['REQUEST_URI'];
+    }
+    
+    function getBaseUrl(){
+        return $this->getProtocol() . "://" . $this->getHost();
     }
 }
