@@ -9,7 +9,7 @@ class UrlHelper {
      * $baseUrl = UrlHelper::getInstance()->getCurrentUrl()->addParameter("view", "home")->toUrl();
      * getInstance takes the exact same parameters as the __construct method.
      * @param mixed $value  value to process, will be cast to a string first
-     * @return object the NumberHelper instance
+     * @return object the UrlHelper instance
      */
     public static function getInstance() {
         $class = __CLASS__;
