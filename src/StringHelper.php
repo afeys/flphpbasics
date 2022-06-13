@@ -235,6 +235,22 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
     }
 
     /**
+     * Returns the current value of the instance as an array of words.
+     * If words are contained between quotes, they are treated as one word
+     * e.g.  'apple lime "yellow banana" pear' will return an array with the
+     * following items
+     * - apple
+     * - lime
+     * - "yellow banana"
+     * - pear
+     * 
+     * @return array containing the words
+     */
+    public function sentenceToWordArray() {
+        preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $this->toString(), $matches);
+        return $matches;
+    }
+    /**
      * @param type $data
      * @return string json_encoded value
      */
