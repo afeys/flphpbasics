@@ -248,6 +248,11 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      */
     public function sentenceToWordArray() {
         preg_match_all('/"(?:\\\\.|[^\\\\"])*"|\S+/', $this->toString(), $matches);
+        if (count($matches) == 1)  {
+           if (count($matches[0]) > 0) {
+               $matches = $matches[0];
+           }
+        }
         return $matches;
     }
     /**
