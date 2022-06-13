@@ -223,6 +223,18 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
     }
 
     /**
+     * Returns the current value of the instance as an ArrayHelper instance.
+     * The value is split into parts based on the value of $separator
+     * 
+     * @param string $separator split the value at these separators
+     * 
+     * @return ArrayHelper
+     */
+    public function toArrayHelper($separator) {
+        return ArrayHelper::getInstance($this->toArray());
+    }
+
+    /**
      * @param type $data
      * @return string json_encoded value
      */
