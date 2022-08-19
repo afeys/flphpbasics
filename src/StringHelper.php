@@ -104,7 +104,7 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
     /**
      * The following offsetXXXXXXXX functions are necessary for the implementation of the ArrayAccess interface 
      * */
-    public function offsetExists($offset) {
+    public function offsetExists($offset): bool {
         $length = $this->getLength();
         $offset = (int) $offset;
         if ($offset >= 0) {
@@ -113,7 +113,7 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         return ($length >= abs($offset));
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset): mixed {
         $length = $this->getLength();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {
@@ -122,7 +122,7 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         return \mb_substr($this->getValue(), $offset, 1, $this->encoding);
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value): void {
         $length = $this->getLength();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {

@@ -83,7 +83,7 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
      * The following offsetXXXXXXXX functions are necessary for the implementation of the ArrayAccess interface 
      * */
 
-    public function offsetExists( $offset) {
+    public function offsetExists( $offset): bool {
         $length = $this->count();
         $offset = (int) $offset;
         if ($offset >= 0) {
@@ -92,7 +92,7 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
         return ($length >= abs($offset));
     }
 
-    public function offsetGet( $offset) {
+    public function offsetGet( $offset): mixed {
         $length = $this->count();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {
@@ -101,7 +101,7 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
         return $this->value[$offset];
     }
 
-    public function offsetSet( $offset,  $value) {
+    public function offsetSet( $offset,  $value): void {
         $length = $this->count();
         $offset = (int) $offset;
         if (($offset >= 0 && $length <= $offset) || $length < abs($offset)) {
