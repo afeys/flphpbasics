@@ -160,7 +160,7 @@ class NumberHelper {
         if ($topvalue == null) {
             $topvalue = 100;
         }
-        srand((double) microtime() * 1000000);
+        srand(intval((double) microtime() * 1000000));
         // take in to account that user might enter the limits wrong
         if ($topvalue < $bottomvalue) {
             $this->setValue(rand($topvalue, $bottomvalue));
