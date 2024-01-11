@@ -1,10 +1,12 @@
 <?php
+// this php file contains various simple helperfunctions
 
 namespace FL;
-
-function if($condition, $iftrue, $iffalse) {
-    if ($condition) {
-        return $iftrue;
+class Functions {
+    static function if($condition, $iftrue = true, $iffalse = true) {
+        if ($condition) {
+            return $iftrue;
+        }
+        return $iffalse;
     }
-    return $iffalse;
 }
