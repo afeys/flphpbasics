@@ -1,6 +1,6 @@
 <?php
 
-namespace flphpbasics;
+namespace FL;
 
 function if($condition, $iftrue, $iffalse) {
     if ($condition) {
