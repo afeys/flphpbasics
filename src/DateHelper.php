@@ -1,6 +1,6 @@
 <?php
 
-namespace flphpbasics;
+namespace FL;
 
 class DateHelper
 {
