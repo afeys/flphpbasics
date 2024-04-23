@@ -14,6 +14,21 @@ class Functions {
         return $iffalse;
     }
 
+    static function isEmpty($value) {
+        if ($value === null) {
+            return true;
+        }
+        if ($value === "") {
+            return true;
+        }
+        if ($value === 0) {
+            return true;
+        }
+        if ($value === "0") {
+            return true;
+        }
+        return false;
+    }
     /**
      * @throws ReflectionException
      */
