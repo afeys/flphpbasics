@@ -4,6 +4,19 @@ namespace FL;
 
 class DateHelper
 {
+    public static function isValidDate($datestring) {
+        if (empty($datestring)) {
+            return false;
+        }
+
+        try {
+            new DateTime($datestring);
+            return true;
+        } catch (Exception $e) {
+            return false;
+        }
+    }
+
     public static function getWeekDaysForYearMonth($year, $month) {
         // the first 28 days of the month contain 20 workdays. So only calculate
         // for the last few days of the month and add 20.
