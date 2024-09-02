@@ -4,6 +4,31 @@ namespace FL;
 
 class DateHelper
 {
+    private $value = '';
+
+    public function __construct($datestring = "") {
+        if (DateHelper::isValidDate($datestring)) {
+            $this->value = new \DateTime($datestring);
+        }
+    }
+
+    public function modifyDate($intervalSpec) {
+        if ($this->value !== "") {
+            $interval = new \DateInterval($intervalSpec);
+            // Determine if we should add or subtract the interval
+            if (strpos($intervalSpec, '-') === 0) {
+                $this->value->sub(new DateInterval(ltrim($intervalSpec, '-')));
+            } else {
+                $this->value->add($interval);
+            }
+        }
+        return $this;
+    }
+
+    public function toString() {
+        return $this->value->format('Y-m-d');
+    }
+
     public static function isValidDate($datestring) {
         if (empty($datestring)) {
             return false;
