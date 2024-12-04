@@ -42,5 +42,12 @@ class Functions {
         }
         return false;
     }
+    static function tabs($nroftabs) {
+        return str_repeat("\t", $nroftabs);
+    }
+
+    static function spaces($nrofspaces) {
+        return str_repeat("\t", $nrofspaces);
+    }
 
 }
