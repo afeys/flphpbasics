@@ -122,6 +122,33 @@ class DateHelper
         }
         return true;
     }
+
+    public function getYear() {
+        return $this->toString(DateTimeToolFormat::YEAR);
+    }
+
+    public function getMonthNum($leadingzeroes = false) {
+        // month in year, 1 -> 12, without leading zeroes
+        if ($leadingzeroes == false) {
+            return $this->toString(DateTimeToolFormat::MONTHNOLEADINGZEROES);
+        } else {
+            return $this->toString(DateTimeToolFormat::MONTH);
+        }
+    }
+
+    public function getMonth() {
+        return $this->toString(DateTimeToolFormat::MONTHNAME);
+    }
+
+    public function getDay($leadingzeroes = false) {
+        // day in month, 1 -> 31, without leading zeroes
+        if ($leadingzeroes == false) {
+            return $this->toString(DateTimeToolFormat::DAYNOLEADINGZEROES);
+        } else {
+            return $this->toString(DateTimeToolFormat::DAY);
+        }
+    }
+
     public function getDayNumInWeek() {
         // 0 = Sunday, 1 = Monday, .... , 6 = Saturday
         return $this->toString(DateTimeToolFormat::DAYNUM);
