@@ -96,6 +96,9 @@ class DateHelper
             return false;
         }
 
+        if ($datestring instanceof \DateTime) {
+            return true;
+        }
         try {
             new \DateTime($datestring);
             return true;
