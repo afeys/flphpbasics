@@ -62,6 +62,18 @@ class DateHelper
         }
     }
 
+    /**
+     * Helper function to the constructor.
+     * This allows chaining multiple commands in one line
+     * getInstance takes the exact same parameters as the __construct method.
+     * @param mixed $value  array to process, has to be a PHP array
+     * @return object the ArrayHelper instance
+     */
+    public static function getInstance($value = "") {
+        $class = __CLASS__;
+        return new $class($value);
+    }
+
     public function modifyDate($intervalSpec) {
         if ($this->value !== "") {
             $interval = new \DateInterval($intervalSpec);
