@@ -79,7 +79,7 @@ class DateHelper
             $interval = new \DateInterval($intervalSpec);
             // Determine if we should add or subtract the interval
             if (strpos($intervalSpec, '-') === 0) {
-                $this->value->sub(new DateInterval(ltrim($intervalSpec, '-')));
+                $this->value->sub(new \DateInterval(ltrim($intervalSpec, '-')));
             } else {
                 $this->value->add($interval);
             }
@@ -97,7 +97,7 @@ class DateHelper
         }
 
         try {
-            new DateTime($datestring);
+            new \DateTime($datestring);
             return true;
         } catch (Exception $e) {
             return false;
