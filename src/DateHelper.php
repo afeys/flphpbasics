@@ -58,7 +58,11 @@ class DateHelper
 
     public function __construct($datestring = "") {
         if (DateHelper::isValidDate($datestring)) {
-            $this->value = new \DateTime($datestring);
+            if (!$datestring instanceof \DateTime) {
+                $this->value = new \DateTime($datestring);
+            } else {
+                $this->value = $datestring;
+            }
         }
     }
 
