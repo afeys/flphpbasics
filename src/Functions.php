@@ -10,11 +10,11 @@ class Functions {
     static function toUTF8($d) {
         if (is_array($d))
             foreach ($d as $k => $v)
-                $d[$k] = toUTF8($v);
+                $d[$k] = Functions::toUTF8($v);
 
         else if (is_object($d))
             foreach ($d as $k => $v)
-                $d->$k = toUTF8($v);
+                $d->$k = Functions::toUTF8($v);
         else
             return utf8_encode($d);
 
