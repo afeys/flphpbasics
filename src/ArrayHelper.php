@@ -172,7 +172,24 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
         return $this->value;
     }
 
- 
+
+    private function convertToUTF8() {
+        array_walk_recursive($this->value, function(&$item, $key) {
+            if (!mb_detect_encoding($item, 'utf-8', true)) {
+                $item = utf8_encode($item);
+            }
+        });
+        return $this;
+    }
+    public function toJSON() {
+        $returnvalue = json_encode(Functions::toUTF8($this->value));
+        if (strlen($returnvalue) < 3 && count($this->value) > 0) {
+            $this->convertToUTF8();
+            $returnvalue = json_encode(Functions::toUTF8($this->value));
+        }
+        return $returnvalue;
+    }
+
 
 
     /**
@@ -665,23 +682,6 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
 
 /*
   
-
-    private function convertToUTF8() {
-        array_walk_recursive($this->value, function(&$item, $key) {
-            if (!mb_detect_encoding($item, 'utf-8', true)) {
-                $item = utf8_encode($item);
-            }
-        });
-        return $this;
-    }
-    public function toJSON() {
-        $returnvalue = convertToJSON($this->value);
-        if (strlen($returnvalue) < 3 && count($this->value) > 0) {
-            $this->convertToUTF8();
-            $returnvalue = convertToJSON($this->value);
-        }
-        return $returnvalue;
-    }
 
 
     function explode($delimiter, $surroundwithquotes = true, $key = "@all") {
