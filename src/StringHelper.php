@@ -1082,6 +1082,23 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         }
     }
 
+
+    public function getLast($num) {
+        $this->setValue($this->getSubString(strlen($this->toString()) - $num, $num));
+        return $this;
+    }
+
+    public function getFirst($num, $adddots = false) {
+        $oldvalue = $this->getValue();
+        $this->setValue($this->getSubString(StringHelper::FIRST, $num));
+        if ($adddots == true) {
+            if ($oldvalue !== $this->getValue()) {
+                $this->setValue($this->getValue() . "...");
+            }
+        }
+        return $this;
+    }
+
 }
 
 /*
@@ -1233,21 +1250,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
     }
 
 
-    public function getLast($num) {
-        $this->setValue($this->getSubString(strlen($this->toString()) - $num, $num));
-        return $this;
-    }
-
-    public function getFirst($num, $adddots = false) {
-        $oldvalue = $this->getValue();
-        $this->setValue($this->getSubString(StringHelper::FIRST, $num));
-        if ($adddots == true) {
-            if ($oldvalue !== $this->getValue()) {
-                $this->setValue($this->getValue() . "...");
-            }
-        }
-        return $this;
-    }
 
  
 
