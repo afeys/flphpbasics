@@ -1098,6 +1098,10 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
         }
         return $this;
     }
+    public function htmlToPlainText() {
+        $this->setValue(preg_replace("/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($this->getValue())))));
+        return $this;
+    }
 
 }
 
@@ -1229,10 +1233,6 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
  
 
 
-    public function htmlToPlainText() {
-        $this->setValue(preg_replace("/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($this->getValue())))));
-        return $this;
-    }
 
 
     public function appendWithIteration($count, $str) {
