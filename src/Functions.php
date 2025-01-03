@@ -63,4 +63,18 @@ class Functions {
         return str_repeat("\t", $nrofspaces);
     }
 
+    static function isValidDomain($domain) {
+        if (filter_var($domain, FILTER_VALIDATE_DOMAIN)) {
+            return true;
+        }
+        return false;
+    }
+
+// this function will check if mailaddress is a valid mailaddress
+    static function isValidMailAddress($mailaddress) {
+        if (filter_var($mailaddress, FILTER_VALIDATE_EMAIL)) {
+            return true;
+        }
+        return false;
+    }
 }
