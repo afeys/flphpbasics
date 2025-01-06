@@ -176,7 +176,7 @@ class ArrayHelper implements IteratorAggregate, ArrayAccess, Countable {
     private function convertToUTF8() {
         array_walk_recursive($this->value, function(&$item, $key) {
             if (!mb_detect_encoding($item, 'utf-8', true)) {
-                $item = utf8_encode($item);
+                $item = Functions::utf8_encode($item);
             }
         });
         return $this;
