@@ -7,6 +7,14 @@ use ReflectionException;
 use ReflectionProperty;
 
 class Functions {
+
+    static function utf8_decode($string) {
+        return mb_convert_encoding($string, 'ISO-8859-1', 'UTF-8');
+
+    }
+    static function utf8_encode($string) {
+        return  mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+    }
     static function toUTF8($d) {
         if (is_array($d))
             foreach ($d as $k => $v)
@@ -16,7 +24,7 @@ class Functions {
             foreach ($d as $k => $v)
                 $d->$k = Functions::toUTF8($v);
         else
-            return utf8_encode($d);
+            return Functions::utf8_encode($d);
 
         return $d;
     }

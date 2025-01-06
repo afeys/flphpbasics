@@ -260,7 +260,7 @@ class StringHelper implements IteratorAggregate, ArrayAccess, Countable {
      * @return string json_encoded value
      */
     public function toJSON() {
-        return json_encode(utf8_encode($this->getValue()));
+        return json_encode(Functions::utf8_encode($this->getValue()));
     }
 
     /**
