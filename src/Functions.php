@@ -9,11 +9,17 @@ use ReflectionProperty;
 class Functions {
 
     static function utf8_decode($string) {
-        return mb_convert_encoding($string, 'ISO-8859-1', 'UTF-8');
+        if ($string !== null && is_string($string)) {
+            return mb_convert_encoding($string, 'ISO-8859-1', 'UTF-8');
+        }
+        return "";
 
     }
     static function utf8_encode($string) {
-        return  mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+        if ($string !== null && is_string($string)) {
+            return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
+        }
+        return "";
     }
     static function toUTF8($d) {
         if (is_array($d))
