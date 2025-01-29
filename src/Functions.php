@@ -12,27 +12,29 @@ class Functions {
         if ($string !== null && is_string($string)) {
             return mb_convert_encoding($string, 'ISO-8859-1', 'UTF-8');
         }
-        return "";
-
+        return $string; // Return original value for non-strings
     }
+
     static function utf8_encode($string) {
         if ($string !== null && is_string($string)) {
             return mb_convert_encoding($string, 'UTF-8', 'ISO-8859-1');
         }
-        return "";
+        return $string; // Return original value for non-strings
     }
+
     static function toUTF8($d) {
-        if (is_array($d))
-            foreach ($d as $k => $v)
+        if (is_array($d)) {
+            foreach ($d as $k => $v) {
                 $d[$k] = Functions::toUTF8($v);
-
-        else if (is_object($d))
-            foreach ($d as $k => $v)
+            }
+        } else if (is_object($d)) {
+            foreach ($d as $k => $v) {
                 $d->$k = Functions::toUTF8($v);
-        else
+            }
+        } else if (is_string($d)) {
             return Functions::utf8_encode($d);
-
-        return $d;
+        }
+        return $d; // Return unchanged for non-strings
     }
     static function if($condition, $iftrue = true, $iffalse = true) {
         if ($condition) {
