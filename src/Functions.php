@@ -43,6 +43,13 @@ class Functions {
         return $iffalse;
     }
 
+    static function ifEmptyThen($valuetocheck, $valuetoreturn) {
+        if ($valuetocheck == null || $valuetocheck == "") {
+            return $valuetoreturn;
+        }
+        return $valuetocheck;
+    }
+
     static function isEmpty($value) {
         if ($value === null) {
             return true;
